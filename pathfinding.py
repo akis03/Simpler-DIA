@@ -7,11 +7,6 @@ from typing import Tuple, List
 Position = Tuple[int, int]
 
 def bfs(start: Position, goal: Position, grid) -> List[Position]:
-    """
-    Breadth-first search on a 2D grid.
-    Allows stepping onto goal even if it's marked as a shelf.
-    Returns a list of positions from start to goal (inclusive), or [] if no path.
-    """
     queue = deque([(start, [start])])
     visited = {start}
     h, w = len(grid), len(grid[0])
@@ -23,10 +18,8 @@ def bfs(start: Position, goal: Position, grid) -> List[Position]:
         for dy, dx in [(-1,0), (1,0), (0,-1), (0,1)]:
             ny, nx = y + dy, x + dx
             neighbor = (ny, nx)
-            # bounds check
             if not (0 <= ny < h and 0 <= nx < w):
                 continue
-            # obstacle check: shelves (1), allow goal
             if grid[ny][nx] == 1 and neighbor != goal:
                 continue
             if neighbor in visited:
@@ -37,16 +30,11 @@ def bfs(start: Position, goal: Position, grid) -> List[Position]:
 
 
 def astar(start: Position, goal: Position, grid) -> List[Position]:
-    """
-    A* pathfinding using Manhattan heuristic.
-    Allows stepping onto goal even if it's a shelf.
-    Returns a list of positions from start to goal (inclusive), or [] if no path.
-    """
     def heuristic(a: Position, b: Position) -> int:
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
     h, w = len(grid), len(grid[0])
-    open_set = []  # heap of tuples (f_score, g_score, position, path)
+    open_set = [] 
     heapq.heappush(open_set, (heuristic(start, goal), 0, start, [start]))
     closed = set()
 
@@ -62,10 +50,8 @@ def astar(start: Position, goal: Position, grid) -> List[Position]:
         for dy, dx in [(-1,0), (1,0), (0,-1), (0,1)]:
             ny, nx = y + dy, x + dx
             neighbor = (ny, nx)
-            # bounds check
             if not (0 <= ny < h and 0 <= nx < w):
                 continue
-            # obstacle check
             if grid[ny][nx] == 1 and neighbor != goal:
                 continue
             if neighbor in closed:
@@ -77,26 +63,20 @@ def astar(start: Position, goal: Position, grid) -> List[Position]:
 
 
 def greedy(start: Position, goal: Position, grid) -> List[Position]:
-    """
-    Greedy best-first search with Manhattan heuristic.
-    Chooses at each step the neighbor closest to goal.
-    Not guaranteed optimal.
-    """
+
     def heuristic(a: Position, b: Position) -> int:
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
-
     h, w = len(grid), len(grid[0])
     current = start
     path = [current]
     visited = {current}
-
     while current != goal:
         y, x = current
         neighbors = []
         for dy, dx in [(-1,0), (1,0), (0,-1), (0,1)]:
             ny, nx = y + dy, x + dx
             neighbor = (ny, nx)
-            # bounds and obstacle check
+            
             if not (0 <= ny < h and 0 <= nx < w):
                 continue
             if grid[ny][nx] == 1 and neighbor != goal:
@@ -106,7 +86,6 @@ def greedy(start: Position, goal: Position, grid) -> List[Position]:
             neighbors.append(neighbor)
         if not neighbors:
             return []
-        # choose neighbor with smallest heuristic
         current = min(neighbors, key=lambda n: heuristic(n, goal))
         visited.add(current)
         path.append(current)

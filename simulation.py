@@ -132,7 +132,7 @@ def run():
     }
     print("Final metrics:", summary)
 
-    # Shelf-wise delivered counts
+    #TLS: Top Left Shelf, TRS: Top Right Shelf, BLS: Bottom Left Shelf, BRS: Bottom Right Shelf.
     labels = ['TLS', 'TRS', 'BLS', 'BRS']
     tls, trs, bls, brs = env.shelf_locations
     metrics = {
@@ -141,10 +141,10 @@ def run():
         'BLS': shelf_delivered[bls],
         'BRS': shelf_delivered[brs],
     }
-    # Print top row: TLS and TRS
+    
     print(f"{labels[0]} - L:{metrics['TLS']['L']}/{SHELF_CAP_LARGE} | S:{metrics['TLS']['S']}/{SHELF_CAP_SMALL}   "
           f"{labels[1]} - L:{metrics['TRS']['L']}/{SHELF_CAP_LARGE} | S:{metrics['TRS']['S']}/{SHELF_CAP_SMALL}")
-    # Print bottom row: BLS and BRS
+    
     print(f"{labels[2]} - L:{metrics['BLS']['L']}/{SHELF_CAP_LARGE} | S:{metrics['BLS']['S']}/{SHELF_CAP_SMALL}   "
           f"{labels[3]} - L:{metrics['BRS']['L']}/{SHELF_CAP_LARGE} | S:{metrics['BRS']['S']}/{SHELF_CAP_SMALL}")
 
